@@ -1,8 +1,8 @@
-import { Link } from "react-router-dom";
+import Link from "next/link";
 
 const CourseCard = ({ courseCode, courseTitle, courseId }) => {
   return (
-    <Link to={`/courses/coursePage/${courseId}`} className="">
+    <Link href={`/courses/${courseId}`} className="">
       <div
         className="px-4 py-4 transition ease-in-out delay-150 bg-white bg-blue-500 border border-gray-200 rounded-lg shadow hover:-translate-y-1 hover:scale-80 hover:bg-violet-100 duration-50 sm:max-w-xs dark:bg-gray-800 dark:border-gray-700"
       >

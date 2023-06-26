@@ -1,6 +1,6 @@
 const Footer = () => {
   return (
-    <footer className="bg-gradient-to-br from-white to-orange-100 bg-gray-900 bg-white bg-gray-900">
+    <footer className="bg-gradient-to-br bg-gray-900 bg-white bg-gray-900">
       <div className="mx-auto w-full max-w-screen-xl p-4 py-6 lg:py-8">
         <div className="md:flex md:justify-between">
           <div className="mb-6 md:mb-0">
