@@ -126,11 +126,11 @@ const CoursesPage = ({modulesData, courseData, textToSummarize,translatedData,su
 export default CoursesPage;
 
 
-// export async function getServerSideProps(context) {
-//   const { params, req, res } = context; 
+export async function getServerSideProps(context) {
+  const { params, req, res } = context; 
   const endpoint = `https://${process.env.TRANSLATOR_TEXT_DOMAIN}.cognitiveservices.azure.com/translator/text/v3.0/translate?api-version=3.0&to=ta`;
-//     const subscriptionKey = process.env.TRANSLATOR_TEXT_KEY;
-//     const region = process.env.TRANSLATOR_TEXT_REGION;
+    const subscriptionKey = process.env.TRANSLATOR_TEXT_KEY;
+    const region = process.env.TRANSLATOR_TEXT_REGION;
 
     const headers = {
           "Ocp-Apim-Subscription-Key": subscriptionKey,
@@ -161,30 +161,52 @@ export default CoursesPage;
     let summary = "";
   
     try {
-      const response = await axios.post(endpoint, data, { headers });
-      console.log(response.data[0].translations[0].text);
+
+      const translatedData = await Promise.all(
+        responseData.data.modules.map(async (item) => {
+          const translatedModuleName = await translateText(item.module_name, headers, endpoint);
+          const translatedTopics = await translateText(item.topics, headers, endpoint);
+          const translatedNotes = await translateText(item.notes, headers, endpoint);
+  
+          return {
+            ...item,
+            notes: translatedNotes,
+            module_name: translatedModuleName,
+            topics: translatedTopics,
+          };
+        })
+      );
+  
+      console.log(JSON.stringify(translatedData));
+
+      
+      
+      responseData.data.modules.sort((a, b) => a.module_no - b.module_no);
+      let text = ""
+      responseData.data.modules.forEach((module) => {
+        text += module.notes;
+      });
+
       
 
-
-//       // Process the translated text response here
-//       return {
-//         props: {
-//           // data: JSON.stringify(response.data[0].translations[0].text),
+      // Process the translated text response here
+      return {
+        props: {
+          // data: JSON.stringify(response.data[0].translations[0].text),
           modulesData:responseData.data.modules,
           translatedData:translatedData,
           courseData:JSON.stringify(responseData.data),
           summary: summary,
-//         }
-//       }
-//     } catch (error) {
-//       console.error(error);
-//      return {
+        }
+      }
+    } catch (error) {
+      console.error(error);
+      return {
         props: {
           data: "Error translating text"
         }
       }
     
-       return{}
-//       // Handle the error
-//     }
-// }
+      // Handle the error
+    }
+}
