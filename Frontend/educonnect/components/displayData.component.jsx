@@ -12,7 +12,7 @@ const DisplayData = ({ moduleId, modulesData }) => {
           <div className="max-w-screen-lg text-gray-500 sm:text-lg dark:text-gray-400">
             <div>
               <h3 className="text-2xl font-semibold">
-                {selectedModule.module_name}
+                {selectedModule.title}
               </h3>
               <p className="py-4">{selectedModule.topics}</p>
               <div className="video-container">

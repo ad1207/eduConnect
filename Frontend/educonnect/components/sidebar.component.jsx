@@ -2,18 +2,49 @@
 import React, { useEffect, useState } from "react";
 import DisplayData from "./displayData.component";
 import axios from "axios";
+import { useRouter } from 'next/router'
+import Link from "next/link";
+import { useParams } from "next/navigation";
 
 
-const ModuleBar = ({params:courseId}) => {
+const dummyModuleData = [
+  {
+    module_id: 1,
+    title: "Module 1",
+    description: "This is module 1",
+    content: "This is module 1 content",
+  },
+  {
+    module_id: 2,
+    title: "Module 2",
+    description: "This is module 2",
+    content: "This is module 2 content",
+  },
+  {
+    module_id: 3,
+    title: "Module 3",
+    description: "This is module 3",
+    content: "This is module 3 content",
+  },
+]
+
+
+const ModuleBar = () => {
   const [courseData,setCourseData]=useState(null);
-  const [modulesData,setModulesData]=useState([]);
+  const [modulesData,setModulesData]=useState(dummyModuleData);
   const [selectedModuleId, setSelectedModuleId] = useState(1);
+  const router = useRouter()
+  // const params = useParams()
+
+  const { courseId, module } = router.query
+
+
   // const { courseId } = useParams();
   const fetchCourseData = async () => {
     try {
       const response = await axios.get(`http://127.0.0.1:8000/api/courses/${courseId}/`);
       console.log(response.data);
-      setCourseData(response.data);
+      // setCourseData(response.data);
       setModulesData(response.data.modules);
     } catch (error) {
       console.error(error);
@@ -64,15 +95,18 @@ const ModuleBar = ({params:courseId}) => {
               </div>
             </li>
             {modulesData.map((module) => (
-              <li key={module.module_no}>
+              <li key={module.module_id}>
+                <Link href={`/courses/${courseId}?module=${module.module_id}`}>
+
                 <div
-                  onClick={() => handleModuleClick(module.module_no)}
-                  className={`cursor-pointer flex items-center p-2 text-gray-900 rounded-lg ${selectedModuleId === module.module_no ? 'bg-violet-500 text-white hover:bg-blue-500' : 'hover:bg-gray-100'}`}
-                >
+                  onClick={() => handleModuleClick(module.module_id)}
+                  className={`cursor-pointer flex items-center p-2 text-gray-900 rounded-lg ${selectedModuleId === module.module_id ? 'bg-violet-500 text-white hover:bg-blue-500' : 'hover:bg-gray-100'}`}
+                  >
                   <span className="flex-1 ml-3 whitespace-nowrap">
-                    Module {module.module_no}
+                    Module {module.module_id}
                   </span>
                 </div>
+                  </Link>
               </li>
             ))}
           </ul>
