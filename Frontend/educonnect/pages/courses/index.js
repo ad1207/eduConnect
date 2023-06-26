@@ -18,8 +18,10 @@ export default function SearchforCourses({query}) {
 //   submit Handler
     const submitHandler = (e) => {
         e.preventDefault();
-        setSearchQuery(e.target.value);
-        push(`/courses?search=${searchQuery}`);
+        const filteredCourses = courseData.filter((course) =>
+        course.course_name.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+        setfilterData(filteredCourses.slice(0,6));
         setSearchQuery("");
 
     };
@@ -66,8 +68,8 @@ export default function SearchforCourses({query}) {
       });
       const data = await response.json();
       setCourseData(data.data);
-      //console.log(courseData);
-      setfilterData(data);
+      const firstSixCourses = data.data.slice(0, 6);
+      setfilterData(firstSixCourses);
     } catch (e) {
       console.log(e);
     }
@@ -131,7 +133,6 @@ export default function SearchforCourses({query}) {
                       onChange={(e) => setSearchQuery(e.target.value)}
                       className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                       placeholder="Search courses..."
-                      required
                     />
                   </div>
                   <button
@@ -158,7 +159,7 @@ export default function SearchforCourses({query}) {
               </div>
               <div className="flex justify-center px-5 py-5">
                 <div className="grid gap-4 sm:grid-cols-3 ">
-                  {courseData?.map((course) => (
+                  {filterdata?.map((course) => (
                     <CourseCard course={course} key={course.id} />
                   ))}
                 </div>
