@@ -30,9 +30,9 @@ const dummyModuleData = [
 
 
 
-const ModuleBar = () => {
+const ModuleBar = ({moduleData}) => {
   const [courseData,setCourseData]=useState(null);
-  const [modulesData,setModulesData]=useState([]);
+  const [modulesData,setModulesData]=useState(moduleData);
   const [selectedModuleId, setSelectedModuleId] = useState(1);
   const router = useRouter()
   // const params = useParams()
@@ -43,20 +43,20 @@ const ModuleBar = () => {
 
   console.log(courseId)
   // const { courseId } = useParams();
-  const fetchCourseData = async () => {
+  // const fetchCourseData = async () => {
     
-    try {
-      const response = await axios.get(`http://localhost:3000/api/courses/${courseId}/`);
-      console.log(response.data);
-      setCourseData(response.data);
-      setModulesData(response.data.modules);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-  useEffect(() => {
-    fetchCourseData();
-  }, [courseId]);
+  //   try {
+  //     const response = await axios.get(`http://localhost:3000/api/courses/${courseId}/`);
+  //     console.log(response.data);
+  //     setCourseData(response.data);
+  //     setModulesData(response.data.modules);
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // };
+  // useEffect(() => {
+  //   fetchCourseData();
+  // }, [courseId]);
 
   const handleModuleClick = (moduleId) => {
     setSelectedModuleId(moduleId);
