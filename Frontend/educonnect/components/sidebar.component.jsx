@@ -40,6 +40,7 @@ const ModuleBar = ({moduleData}) => {
   const [textForSummarizer, setTextForSummarizer] = useState("");
 
   let { courseId, moduleId } = router.query
+
   // const { courseId } = useParams();
   const fetchCourseData = async () => {
     

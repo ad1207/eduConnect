@@ -8,7 +8,8 @@ const DisplayData = ({ moduleId, modulesData, sample }) => {
   const [speechSynthesizer, setSpeechSynthesizer] = useState(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const selectedModule = modulesData.find((module) => module.id == moduleId);
-  console.log('module data', modulesData, moduleId, sample);
+
+  // console.log("module data", modulesData, moduleId, sample);
 
   const synthesizeSpeech = (text) => {
     const sdk = require('microsoft-cognitiveservices-speech-sdk');

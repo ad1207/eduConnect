@@ -3,9 +3,24 @@ import axios from "axios";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 const CoursesPage = ({modulesData, courseData, textToSummarize,translatedData}) => {
   const [selectedModuleId, setSelectedModuleId] = useState(1);
+  const [languages, setLanguages] = useState([["english","en"],["hindi","hi"],["marathi","mr"], ["tamil","ta"]]);
+  const [selectedLanguage, setSelectedLanguage] = useState("en");
+
+  // useEffect(() => {
+  //   fetchSupportedLanguages();
+  // }, []);
+
+  // const fetchSupportedLanguages = async () => {
+  //   const endpoint = "https://api.cognitive.microsofttranslator.com/languages?api-version=3.0";
+  //   const response = await axios.get(endpoint);
+  //   setLanguages(response.data.translation);
+  // };
+
+
   const [summary, setSummary] = useState("");
   const router = useRouter()
   const { push } = useRouter();
@@ -50,7 +65,14 @@ const CoursesPage = ({modulesData, courseData, textToSummarize,translatedData}) 
       push(`/courses/${courseId}?moduleId=${moduleId}`)
     }
   };
+  const handleLanguageChange = async (event) => {
+    const selectedCode = event.target.value;
+    setSelectedLanguage(selectedCode);
 
+
+      push(`/courses/${courseId}?moduleId=${moduleId}&language=${selectedCode}`)
+    
+  };
   const handleModuleClickNext = (moduleId) => {
     const totalModules = modulesData.length;
     const nextModuleId = moduleId + 1;
@@ -66,6 +88,7 @@ const CoursesPage = ({modulesData, courseData, textToSummarize,translatedData}) 
     <>
       {/* <h1>{data}</h1> */}
       <div className="h-screen z-0">
+      
     <div className="pt-24 ">
       <button data-drawer-target="default-sidebar" data-drawer-toggle="default-sidebar" aria-controls="default-sidebar" type="button" className="inline-flex items-center p-2 mt-2 ml-3 text-sm text-gray-500 rounded-lg sm:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200">
         <span className="sr-only">Open sidebar</span>
@@ -86,8 +109,9 @@ const CoursesPage = ({modulesData, courseData, textToSummarize,translatedData}) 
               </div>
             </li>
             {modulesData.map((module) => (
-              <li key={module.module_no}>
-                <Link href={`/courses/${courseId}?moduleId=${module.module_no}`}>
+
+              <li key={module.id}>
+                <Link href={`/courses/${courseId}?moduleId=${module.id}&language=${selectedLanguage}`}>
 
                 <div
                   onClick={() => handleModuleClick(module.id)}
@@ -117,6 +141,22 @@ const CoursesPage = ({modulesData, courseData, textToSummarize,translatedData}) 
       {/* Displaying Module Data here */}
       <div className="p-4 sm:ml-64 ">
         <div className="p-4 border-2 border-gray-200 border-dashed rounded-lg bg-gray-50">
+        <div>
+      <select  onChange={handleLanguageChange} value={selectedLanguage}>
+        <option value="">Select a language</option>
+        {languages.map((lang) => (
+          <option key={lang[1]} value={lang[1]}>
+            {lang[0]}
+          </option>
+        ))}
+      </select>
+      {/* {selectedLanguage && (
+        <div>
+          <p>Selected Language: {selectedLanguage.name}</p>
+          <p>Language Code: {selectedLanguage.code}</p>
+        </div>
+      )} */}
+    </div>
                <DisplayData moduleId={moduleId} modulesData={modulesData} />
 
   
@@ -154,7 +194,7 @@ export default CoursesPage;
 
 export async function getServerSideProps(context) {
   const { params, req, res } = context; 
-  const endpoint = `https://${process.env.TRANSLATOR_TEXT_DOMAIN}.cognitiveservices.azure.com/translator/text/v3.0/translate?api-version=3.0&to=ta`;
+  const endpoint = `https://${process.env.TRANSLATOR_TEXT_DOMAIN}.cognitiveservices.azure.com/translator/text/v3.0/translate?api-version=3.0&to=${context.query.language}`;
     const subscriptionKey = process.env.TRANSLATOR_TEXT_KEY;
     const region = process.env.TRANSLATOR_TEXT_REGION;
 
