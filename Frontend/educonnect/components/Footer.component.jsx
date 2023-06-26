@@ -8,53 +8,17 @@ const Footer = () => {
               <img
                 src="https://flowbite.com/docs/images/logo.svg"
                 className="h-8 mr-3"
-                alt="FlowBite Logo"
+                alt="Logo"
               />
               <span className="self-center text-2xl font-semibold whitespace-nowrap text-black">
-                StudySphere
+                EduConnect
               </span>
             </a>
           </div>
           <div className="grid grid-cols-2 gap-8 sm:gap-6 sm:grid-cols-3">
             <div>
-              <h2 className="mb-6 text-sm font-semibold text-gray-900 uppercase text-black">
-                Resources
-              </h2>
-              <ul className="text-gray-600 dark:text-gray-400 font-medium">
-                <li className="mb-4">
-                  <a href="/" className="hover:underline">
-                    Link 1
-                  </a>
-                </li>
-                <li>
-                  <a href="/" className="hover:underline">
-                    Link 2
-                  </a>
-                </li>
-              </ul>
             </div>
             <div>
-              <h2 className="mb-6 text-sm font-semibold text-gray-900 uppercase text-black">
-                Follow us
-              </h2>
-              <ul className="text-gray-600 dark:text-gray-400 font-medium">
-                <li className="mb-4">
-                  <a
-                    href="/"
-                    className="hover:underline "
-                  >
-                    Github
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="/"
-                    className="hover:underline"
-                  >
-                    Discord
-                  </a>
-                </li>
-              </ul>
             </div>
             
           </div>
@@ -63,8 +27,8 @@ const Footer = () => {
         <div className="sm:flex sm:items-center sm:justify-between">
           <span className="text-sm text-gray-500 sm:text-center dark:text-gray-400">
             © 2023{" "}
-            <a href="https://flowbite.com/" className="hover:underline">
-              StudySphere™
+            <a href="" className="hover:underline">
+              EduConnect
             </a>
             . All Rights Reserved.
           </span>
