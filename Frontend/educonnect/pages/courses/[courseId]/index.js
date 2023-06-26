@@ -192,9 +192,10 @@ const CoursesPage = ({modulesData, courseData, textToSummarize,translatedData}) 
 export default CoursesPage;
 
 
+
 export async function getServerSideProps(context) {
   const { params, req, res } = context; 
-  const endpoint = `https://${process.env.TRANSLATOR_TEXT_DOMAIN}.cognitiveservices.azure.com/translator/text/v3.0/translate?api-version=3.0&to=${context.query.language}`;
+  const endpoint = `https://${process.env.TRANSLATOR_TEXT_DOMAIN}.cognitiveservices.azure.com/translator/text/v3.0/translate?api-version=3.0&to=ta`;
     const subscriptionKey = process.env.TRANSLATOR_TEXT_KEY;
     const region = process.env.TRANSLATOR_TEXT_REGION;
 
@@ -211,6 +212,34 @@ export async function getServerSideProps(context) {
       } catch (error) {
         console.error(error);
       }
+        const data = [{ Text: "Hello, what is your name?" }];
+        
+        // console.log("Module data",responseData.data.modules);
+
+        try {
+          // const translatedData = await Promise.all(
+          //   data.map(async (item) => {
+            //   const translatedNotes = await axios.post(endpoint, [{Text : item.notes}], { headers });
+            //   const translatedModuleName = await axios.post(endpoint, [{Text : item.module_name}], { headers });
+            //   const translatedTopics = await axios.post(endpoint, [{Text:item.topics}], { headers });
+      
+            //   return {
+            //     ...item,
+            //     notes: translatedNotes.data[0].translations[0].text,
+            //     module_name: translatedModuleName.data[0].translations[0].text,
+            //     topics: translatedTopics.data[0].translations[0].text,
+            //   };
+            translatedData = await axios.post(endpoint, [{Text : "Hello there"}], { headers })
+            // })
+          
+          // );
+      
+          console.log(translatedData);
+          // Process the translated data here
+        } catch (error) {
+          console.error("error in translate");
+          // Handle the error
+        }
 
         const translateText = async (text, headers, endpoint) => {
           const requestBody = [{ Text: text }];
@@ -224,7 +253,6 @@ export async function getServerSideProps(context) {
           }
         };
         
-    let summary = "";
   
     try {
 
@@ -244,25 +272,19 @@ export async function getServerSideProps(context) {
       );
   
       console.log(JSON.stringify(translatedData));
+      
 
-      
-      
-      responseData.data.modules.sort((a, b) => a.module_no - b.module_no);
-      let text = ""
-      responseData.data.modules.forEach((module) => {
-        text += module.notes;
-      });
-
-      
 
       // Process the translated text response here
       return {
         props: {
           // data: JSON.stringify(response.data[0].translations[0].text),
+
           modulesData:responseData.data.modules,
           translatedData:translatedData,
           courseData:JSON.stringify(responseData.data),
           textToSummarize: text,
+
         }
       }
     } catch (error) {
