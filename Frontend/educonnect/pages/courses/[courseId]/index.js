@@ -2,33 +2,6 @@ import ModuleBar from "@/components/sidebar.component";
 import axios from "axios";
 
 const CoursesPage = ({data}) => {
-
-  console.log("Credientials", process.env.TRANSLATOR_TEXT_DOMAIN)
-  // const translateText = async () => {
-  //   const endpoint = `https://${process.env.TRANSLATOR_TEXT_DOMAIN}.cognitiveservices.azure.com/translator/text/v3.0/translate?api-version=3.0&to=ta`;
-  //   const subscriptionKey = process.env.TRANSLATOR_TEXT_KEY;
-  //   const region = process.env.TRANSLATOR_TEXT_REGION;
-  
-  //   const headers = {
-  //     "Ocp-Apim-Subscription-Key": subscriptionKey,
-  //     "Ocp-Apim-Subscription-Region": region,
-  //     "Content-Type": "application/json",
-  //   };
-  
-  //   const data = [{ Text: "Hello, what is your name?" }];
-  
-  //   try {
-  //     const response = await axios.post(endpoint, data, { headers });
-  //     console.log(response.data);
-  //     // Process the translated text response here
-  //   } catch (error) {
-  //     console.error(error);
-  //     // Handle the error
-  //   }
-  // };
-  
-  // // Call the translateText function
-  // translateText();
   return (
     <>
       <h1>{data}</h1>
@@ -50,7 +23,7 @@ export async function getServerSideProps(context) {
           "Ocp-Apim-Subscription-Region": region,
           "Content-Type": "application/json",
         };
-        
+
     const data = [{ Text: "Hello, what is your name?" }];
   
     try {
