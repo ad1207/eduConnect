@@ -25,18 +25,98 @@ export default function SearchforCourses({query}) {
 
 
   const debounce = useDebounce(query, 500);
+  const courseData = [
+    {
+        id: 1,
+        title: "Introduction to Computer Science",
+        description: "This course is an introduction to the intellectual enterprises of computer science and the art of programming.",
+        image: "https://plus.unsplash.com/premium_photo-1683631776585-e1d224424ec5?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1171&q=80",
+        rating: 4.5,
+        numReviews: 12,
+        instructor: "John Doe",
+        category: "Computer Science",
+        level: "Beginner",
+        language: "English",
+        lessons: 10,
+        students: 100,
+        certificate: true,
+        enrolled: false,
+        createdAt: "2021-07-01T11:51:32.000Z",
+        updatedAt: "2021-07-01T11:51:32.000Z",
+        __v: 0,
+    },
+    {
+        id: 2,
+        title: "Introduction to Computer Science",
+        description: "This course is an introduction to the intellectual enterprises of computer science and the art of programming.",
+        image: "https://plus.unsplash.com/premium_photo-1683631776585-e1d224424ec5?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1171&q=80",
+        rating: 4.5,
+        numReviews: 12,
+        instructor: "John Doe",
+        category: "Computer Science",
+        level: "Beginner",
+        language: "English",
+        lessons: 10,
+        students: 100,
+        certificate: true,
+        enrolled: false,
+        createdAt: "2021-07-01T11:51:32.000Z",
+        updatedAt: "2021-07-01T11:51:32.000Z",
+        __v: 0,
+    },
+    {
+        id: 3,
+        title: "Introduction to Computer Science",
+        description: "This course is an introduction to the intellectual enterprises of computer science and the art of programming.",
+        image: "https://plus.unsplash.com/premium_photo-1683631776585-e1d224424ec5?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1171&q=80",
+        rating: 4.5,
+        numReviews: 12,
+        instructor: "John Doe",
+        category: "Computer Science",
+        level: "Beginner",
+        language: "English",
+        lessons: 10,
+        students: 100,
+        certificate: true,
+        enrolled: false,
+        createdAt: "2021-07-01T11:51:32.000Z",
+        updatedAt: "2021-07-01T11:51:32.000Z",
+        __v: 0,
+    },
+    {
+        id: 4,
+        title: "Introduction to Computer Science",
+        description: "This course is an introduction to the intellectual enterprises of computer science and the art of programming.",
+        image: "https://plus.unsplash.com/premium_photo-1683631776585-e1d224424ec5?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1171&q=80",
+        rating: 4.5,
+        numReviews: 12,
+        instructor: "John Doe",
+        category: "Computer Science",
+        level: "Beginner",
+        language: "English",
+        lessons: 10,
+        students: 100,
+        certificate: true,
+        enrolled: false,
+        createdAt: "2021-07-01T11:51:32.000Z",
+        updatedAt: "2021-07-01T11:51:32.000Z",
+        __v: 0,
+    },
+  ]
+
+
   const fetchData = async () => {
-    const endpoint = `http://127.0.0.1:8000/api/courses/search?search=${query}`;
-    try {
-      const response = await fetch(endpoint, {
-        method: "GET",
-      });
-      const data = await response.json();
-      console.log(data);
-      setData(data);
-    } catch (e) {
-      console.log(e);
-    }
+    // const endpoint = `http://127.0.0.1:8000/api/courses/search?search=${query}`;
+    // try {
+    //   const response = await fetch(endpoint, {
+    //     method: "GET",
+    //   });
+    //   const data = await response.json();
+    //   console.log(data);
+    //   setData(data);
+    // } catch (e) {
+    //   console.log(e);
+    // }
   };
   useEffect(() => {
     fetchData();
@@ -60,7 +140,7 @@ export default function SearchforCourses({query}) {
               }}
             />
           </div>
-          <div className="max-w-2xl py-32 mx-auto sm:py-48 lg:py-56">
+          <div className="max-w-4xl py-32 mx-auto sm:py-48 lg:py-56">
             <div className="text-center">
               <h1 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl">
                 Looking for Lectures, Notes or Don't Know Where to Start?
@@ -123,15 +203,9 @@ export default function SearchforCourses({query}) {
                 </form>
               </div>
               <div className="flex justify-center px-5 py-5">
-                <div className="grid gap-4 sm:grid-cols-3">
-                  {data.map((course) => (
-                    <div key={course.id}>
-                      <CourseCard
-                        courseCode={course.course_code}
-                        courseTitle={course.course_name}
-                        courseId={course.id}
-                      />
-                    </div>
+                <div className="grid gap-4 sm:grid-cols-3 ">
+                  {courseData.map((course) => (
+                    <CourseCard course={course} key={course._id} />
                   ))}
                 </div>
               </div>
