@@ -37,11 +37,9 @@ const ModuleBar = () => {
   const router = useRouter()
   // const params = useParams()
   const { push } = useRouter();
-
+  const [textForSummarizer, setTextForSummarizer] = useState("");
 
   let { courseId, moduleId } = router.query
-
-  console.log(courseId)
   // const { courseId } = useParams();
   const fetchCourseData = async () => {
     
@@ -49,7 +47,15 @@ const ModuleBar = () => {
       const response = await axios.get(`http://localhost:3000/api/courses/${courseId}/`);
       console.log(response.data);
       setCourseData(response.data);
-      setModulesData(response.data.modules);
+      let modules = response.data.modules;
+      modules.sort((a, b) => a.module_no - b.module_no);
+      let text = ""
+      modules.forEach((module) => {
+        text += module.notes;
+      });
+      setTextForSummarizer(text);
+      setModulesData(modules);
+      console.log(textForSummarizer)
     } catch (error) {
       console.error(error);
     }
@@ -61,6 +67,30 @@ const ModuleBar = () => {
   const handleModuleClick = (moduleId) => {
     setSelectedModuleId(moduleId);
   };
+
+
+  const postData = async () => {
+    try {
+      const response = await axios.post('https://api.oneai.com/api/v0/pipeline', {
+        input: textForSummarizer,
+        steps: [
+          {
+            skill: "summarize"
+          }
+        ]
+      }, {
+        headers: {
+          'accept': 'application/json',
+          'Content-Type': 'application/json',
+          'api-key': '55337929-844a-4b93-b4d7-5c167878d16a'
+        }
+      });
+  
+      console.log(response.data);
+    } catch (error) {
+      console.error(error);
+    }
+  }
 
   const handleModuleClickPrev = (moduleId) => {
     moduleId = moduleId - 1;
@@ -102,20 +132,25 @@ const ModuleBar = () => {
               </div>
             </li>
             {modulesData.map((module) => (
-              <li key={module.id}>
-                <Link href={`/courses/${courseId}?moduleId=${module.id}`}>
+              <li key={module.module_no}>
+                <Link href={`/courses/${courseId}?moduleId=${module.module_no}`}>
 
                 <div
                   onClick={() => handleModuleClick(module.id)}
-                  className={`cursor-pointer flex items-center p-2 text-gray-900 rounded-lg ${selectedModuleId === module.id ? 'bg-violet-500 text-white hover:bg-blue-500' : 'hover:bg-gray-100'}`}
+                  className={`cursor-pointer flex items-center p-2 text-gray-900 rounded-lg ${selectedModuleId === module.module_no ? 'bg-violet-500 text-white hover:bg-blue-500' : 'hover:bg-gray-100'}`}
                   >
                   <span className="flex-1 ml-3 whitespace-nowrap">
-                    Module {module.id}
+                    Module {module.module_no}
                   </span>
                 </div>
                   </Link>
               </li>
             ))}
+            <li>
+                <div className={`cursor-pointer flex items-center p-2 text-gray-900 rounded-lg`}>
+                <button type="button" onClick={()=>postData()} className="w-full focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2  focus:outline-none ">Get Summary</button>
+                </div>
+            </li>
             <li>
                 <button type="button" onClick={()=>push('/courses')} className="w-full text-white bg-violet-500 hover:bg-blue-500 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2  focus:outline-none ">Go Back</button>
             </li>
