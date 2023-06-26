@@ -1,7 +1,7 @@
 import supabase from "@/utils/supabaseClient"
 
 export default async function handler(req, res) {
-    const modules = await supabase.from('modules').select('id, module_name, module_no, topics, links, notes').eq('courses', req.query.id )
+    const modules = await supabase.from('modules').select('id, module_name, module_no, topics, links, notes').eq('course_id', req.query.id )
     //res.status(200).json({ moduleList, moduleError })
     const courseDetails = await supabase.from('courses').select('id, course_code, course_name').eq('id', req.query.id)
     
