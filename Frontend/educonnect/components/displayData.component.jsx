@@ -1,10 +1,16 @@
-const DisplayData = ({ moduleId, modulesData }) => {
+import axios from "axios";
+import uuidv4 from "uuidv4";
+
+const DisplayData = ({ moduleId, modulesData, sample }) => {
   const selectedModule = modulesData.find((module) => module.id == moduleId);
-  console.log("module data", modulesData, moduleId);
+  console.log("module data", modulesData, moduleId, sample);
+
+  
 
   if (!selectedModule) {
     return <div>No module selected</div>;
   }
+  // getLanguages()
 
   return (
     <>
@@ -70,3 +76,40 @@ const DisplayData = ({ moduleId, modulesData }) => {
 };
 
 export default DisplayData;
+
+
+export async function getServerSideProps() {
+  // console.log("Server side props")
+  // var endpoint_var = process.env.TRANSLATOR_TEXT_ENDPOINT;
+  // console.log("ENV", process.env.TRANSLATOR_TEXT_ENDPOINT)
+  // if (!process.env.TRANSLATOR_TEXT_ENDPOINT) {
+  //     throw new Error('Please set/export the following environment variable: ' + endpoint_var);
+  // }
+  // var endpoint = process.env[endpoint_var];
+  
+  // /* If you encounter any issues with the base_url or path, make sure that you are
+  // using the latest endpoint: https://docs.microsoft.com/azure/cognitive-services/translator/reference/v3-0-languages */
+  //     let options = {
+  //         method: 'GET',
+  //         baseUrl: endpoint,
+  //         url: 'languages',
+  //         qs: {
+  //           'api-version': '3.0',
+  //         },
+  //         headers: {
+  //           'Content-type': 'application/json',
+  //           'X-ClientTraceId': uuidv4().toString()
+  //         },
+  //         json: true,
+  //     };
+  
+  //     let response = await request(options);
+  //     console.log(JSON.stringify(response, null, 4));
+  //     return response;
+
+  return {
+    props: {
+      sample:"Hello"
+  }
+}
+}

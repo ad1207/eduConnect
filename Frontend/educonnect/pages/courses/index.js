@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 // import Loader from "../components/loader.component";
 import { redirect } from 'next/navigation';
-
 import axios from "axios";
 import CourseCard from "@/components/courseCard.component";
 import useDebounce from "@/hooks/use-debounce";
@@ -13,6 +12,44 @@ export default function SearchforCourses({query}) {
   const [courseData, setCourseData] = useState([]);
   const [filterdata, setfilterData] = useState([]);
   const { push } = useRouter();
+
+  var endpoint_var = process.env.TRANSLATOR_TEXT_ENDPOINT;
+//   if (!process.env[endpoint_var]) {
+//       throw new Error('Please set/export the following environment variable: ' + endpoint_var);
+//   }
+//   var endpoint = process.env[endpoint_var];
+//   console.log(endpoint);
+  /* If you encounter any issues with the base_url or path, make sure that you are
+  using the latest endpoint: https://docs.microsoft.com/azure/cognitive-services/translator/reference/v3-0-languages */
+  function getLanguages(){
+      let options = {
+          method: 'GET',
+          baseUrl: endpoint_var,
+          url: 'languages',
+          qs: {
+            'api-version': '3.0',
+          },
+          headers: {
+            'Content-type': 'application/json',
+            'X-ClientTraceId': crypto.randomUUID().toString(),
+          },
+          json: true,
+      };
+
+    //   request(options, function(err, res, body){
+        //   console.log(JSON.stringify(options, null, 4));
+    //   });
+    axios.request(options).then(function (response) {
+        console.log(JSON.stringify(response.data, null, 4));
+      }
+    ).catch(function (error) {
+        console.error(error);
+      } 
+    );
+  };
+
+  // Call the function to get a list of supported languages.
+  getLanguages();
 
 
 //   submit Handler
