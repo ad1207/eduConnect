@@ -30,9 +30,9 @@ const dummyModuleData = [
 
 
 
-const ModuleBar = () => {
+const ModuleBar = ({moduleData}) => {
   const [courseData,setCourseData]=useState(null);
-  const [modulesData,setModulesData]=useState([]);
+  const [modulesData,setModulesData]=useState(moduleData);
   const [selectedModuleId, setSelectedModuleId] = useState(1);
   const router = useRouter()
   // const params = useParams()
@@ -41,7 +41,7 @@ const ModuleBar = () => {
 
   let { courseId, moduleId } = router.query
   // const { courseId } = useParams();
-  const fetchCourseData = async () => {
+  // const fetchCourseData = async () => {
     
     try {
       const response = await axios.get(`http://localhost:3000/api/courses/${courseId}/`);
