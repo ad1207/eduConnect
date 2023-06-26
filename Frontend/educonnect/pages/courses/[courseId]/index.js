@@ -2,16 +2,42 @@ import DisplayData from "@/components/displayData.component";
 import axios from "axios";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
-const CoursesPage = ({modulesData, courseData, textToSummarize,translatedData,summary}) => {
+const CoursesPage = ({modulesData, courseData, textToSummarize,translatedData}) => {
   const [selectedModuleId, setSelectedModuleId] = useState(1);
-
+  const [summary, setSummary] = useState("");
   const router = useRouter()
   const { push } = useRouter();
   let { courseId, moduleId } = router.query
 
+  const postData = async () => {
+    try {
+      const response = await axios.post('https://api.oneai.com/api/v0/pipeline', {
+        input: textToSummarize,
+        steps: [
+          {
+            skill: "summarize"
+          }
+        ]
+      }, {
+        headers: {
+          'accept': 'application/json',
+          'Content-Type': 'application/json',
+          'api-key': '55337929-844a-4b93-b4d7-5c167878d16a'
+        }
+      });
+      console.log(response.data)
+      setSummary(response.data.output[0].text);
   
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  useEffect(() => {
+    postData();
+  }, []);
 
   const handleModuleClick = (moduleId) => {
     setSelectedModuleId(moduleId);
@@ -56,7 +82,7 @@ const CoursesPage = ({modulesData, courseData, textToSummarize,translatedData,su
             
             <li>
               <div className="flex items-center p-2 text-2xl font-bold text-gray-900 rounded-lg">
-                <span className="ml-3">{courseData?.course_name}</span>
+                <span className="ml-3">{courseData.course_name}</span>
               </div>
             </li>
             {modulesData.map((module) => (
@@ -76,7 +102,7 @@ const CoursesPage = ({modulesData, courseData, textToSummarize,translatedData,su
             ))}
             <li>
               
-              <button type="button" onClick={()=>postData()} className="w-full focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2  focus:outline-none ">Get Summary</button>
+              <button type="button" onClick={()=>console.log(summary)} className="w-full focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2  focus:outline-none ">Get Summary</button>
             
           </li>
             <li>
@@ -196,7 +222,7 @@ export async function getServerSideProps(context) {
           modulesData:responseData.data.modules,
           translatedData:translatedData,
           courseData:JSON.stringify(responseData.data),
-          summary: summary,
+          textToSummarize: text,
         }
       }
     } catch (error) {
