@@ -1,5 +1,5 @@
 const DisplayData = ({ moduleId, modulesData }) => {
-  const selectedModule = modulesData.find((module) => module.module_id == moduleId);
+  const selectedModule = modulesData.find((module) => module.id == moduleId);
   console.log("module data", modulesData, moduleId);
 
   if (!selectedModule) {
@@ -13,9 +13,9 @@ const DisplayData = ({ moduleId, modulesData }) => {
           <div className="max-w-screen-lg text-gray-500 sm:text-lg ">
             <div>
               <h3 className="text-2xl font-semibold">
-                {selectedModule.title}
+                {selectedModule.module_name}
               </h3>
-              <p className="py-4">{selectedModule.description}</p>
+              <p className="py-4">{selectedModule.topics}</p>
               {/* <div className="video-container">
                 {selectedModule.links ? (
                   <iframe
@@ -31,10 +31,10 @@ const DisplayData = ({ moduleId, modulesData }) => {
               </div> */}
               {/* displaying content */}
               <div className="">
-                {selectedModule.content ? (
+                {selectedModule.notes ? (
                   <div
                     dangerouslySetInnerHTML={{
-                      __html: selectedModule.content,
+                      __html: selectedModule.notes,
                     }}
                   ></div>
                 ) : null}

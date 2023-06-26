@@ -2,7 +2,7 @@ import Link from "next/link";
 
 const CourseCard = ({ course}) => {
   return (
-    <Link href={`/courses/${course.id}`} className="">
+    <Link href={`/courses/${course.id}?moduleId=1`} className="">
  <div className="flex flex-col bg-white shadow-lg rounded-lg overflow-hidden ">
       <img
         src={course.image}
