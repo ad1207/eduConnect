@@ -10,7 +10,7 @@ const CoursesPage = ({modulesData, courseData, textToSummarize,translatedData,su
   const [selectedLanguage, setSelectedLanguage] = useState("en");
 
   // useEffect(() => {
-  //   fetchSupportedLanguages();
+  //   fetchSupportedLanguages();ta
   // }, []);
 
   // const fetchSupportedLanguages = async () => {
@@ -25,7 +25,29 @@ const CoursesPage = ({modulesData, courseData, textToSummarize,translatedData,su
   const { push } = useRouter();
   let { courseId, moduleId } = router.query
 
+  const postData = async () => {
+    try {
+      const response = await axios.post('https://api.oneai.com/api/v0/pipeline', {
+        input: textToSummarize,
+        steps: [
+          {
+            skill: "summarize"
+          }
+        ]
+      }, {
+        headers: {
+          'accept': 'application/json',
+          'Content-Type': 'application/json',
+          'api-key': '55337929-844a-4b93-b4d7-5c167878d16a'
+        }
+      });
+
+      console.log(response.data.output[0].text);
   
+    } catch (error) {
+      console.error(error);
+    }
+  }
 
   const handleModuleClick = (moduleId) => {
     setSelectedModuleId(moduleId);
@@ -177,14 +199,19 @@ export async function getServerSideProps(context) {
           "Content-Type": "application/json",
         };
         var responseData = []
+        var text = ""
       try {
         responseData = await axios.get(`http://localhost:3000/api/courses/${params.courseId}/`);
         // setCourseData(response.data);
         // setModulesData(response.data.modules);
         // sort responseData according to module no
         responseData.data.modules.sort((a, b) => a.module_no - b.module_no);
+        let text = ""
+        responseData.data.modules.forEach((module) => {
+          text += module.notes;
+        });
         // console.log("responseData",responseData.data.modules);
-        
+
       } catch (error) {
         console.error(error);
       }
@@ -256,7 +283,8 @@ export async function getServerSideProps(context) {
         props: {
           // data: JSON.stringify(response.data[0].translations[0].text),
           modulesData: translatedData,
-          courseData:JSON.stringify(responseData.data)
+          courseData:JSON.stringify(responseData.data),
+          textToSummarize: text,
         }
       }
     } catch (error) {
