@@ -3,9 +3,8 @@ import axios from "axios";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { useEffect, useState } from "react";
 
-const CoursesPage = ({modulesData, courseData, textToSummarize,translatedData}) => {
+const CoursesPage = ({modulesData, courseData, textToSummarize,translatedData,summary}) => {
   const [selectedModuleId, setSelectedModuleId] = useState(1);
   const [languages, setLanguages] = useState([["english","en"],["hindi","hi"],["marathi","mr"], ["tamil","ta"]]);
   const [selectedLanguage, setSelectedLanguage] = useState("en");
@@ -21,38 +20,12 @@ const CoursesPage = ({modulesData, courseData, textToSummarize,translatedData}) 
   // };
 
 
-  const [summary, setSummary] = useState("");
+
   const router = useRouter()
   const { push } = useRouter();
   let { courseId, moduleId } = router.query
 
-  const postData = async () => {
-    try {
-      const response = await axios.post('https://api.oneai.com/api/v0/pipeline', {
-        input: textToSummarize,
-        steps: [
-          {
-            skill: "summarize"
-          }
-        ]
-      }, {
-        headers: {
-          'accept': 'application/json',
-          'Content-Type': 'application/json',
-          'api-key': '55337929-844a-4b93-b4d7-5c167878d16a'
-        }
-      });
-      console.log(response.data)
-      setSummary(response.data.output[0].text);
   
-    } catch (error) {
-      console.error(error);
-    }
-  }
-
-  useEffect(() => {
-    postData();
-  }, []);
 
   const handleModuleClick = (moduleId) => {
     setSelectedModuleId(moduleId);
@@ -105,7 +78,7 @@ const CoursesPage = ({modulesData, courseData, textToSummarize,translatedData}) 
             
             <li>
               <div className="flex items-center p-2 text-2xl font-bold text-gray-900 rounded-lg">
-                <span className="ml-3">{courseData.course_name}</span>
+                <span className="ml-3">{courseData?.course_name}</span>
               </div>
             </li>
             {modulesData.map((module) => (
@@ -126,7 +99,7 @@ const CoursesPage = ({modulesData, courseData, textToSummarize,translatedData}) 
             ))}
             <li>
               
-              <button type="button" onClick={()=>console.log(summary)} className="w-full focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2  focus:outline-none ">Get Summary</button>
+              <button type="button" onClick={()=>postData()} className="w-full focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2  focus:outline-none ">Get Summary</button>
             
           </li>
             <li>
@@ -192,10 +165,9 @@ const CoursesPage = ({modulesData, courseData, textToSummarize,translatedData}) 
 export default CoursesPage;
 
 
-
 export async function getServerSideProps(context) {
   const { params, req, res } = context; 
-  const endpoint = `https://${process.env.TRANSLATOR_TEXT_DOMAIN}.cognitiveservices.azure.com/translator/text/v3.0/translate?api-version=3.0&to=ta`;
+  const endpoint = `https://${process.env.TRANSLATOR_TEXT_DOMAIN}.cognitiveservices.azure.com/translator/text/v3.0/translate?api-version=3.0&to=${context.query.language}`;
     const subscriptionKey = process.env.TRANSLATOR_TEXT_KEY;
     const region = process.env.TRANSLATOR_TEXT_REGION;
 
@@ -209,6 +181,10 @@ export async function getServerSideProps(context) {
         responseData = await axios.get(`http://localhost:3000/api/courses/${params.courseId}/`);
         // setCourseData(response.data);
         // setModulesData(response.data.modules);
+        // sort responseData according to module no
+        responseData.data.modules.sort((a, b) => a.module_no - b.module_no);
+        // console.log("responseData",responseData.data.modules);
+        
       } catch (error) {
         console.error(error);
       }
@@ -279,12 +255,8 @@ export async function getServerSideProps(context) {
       return {
         props: {
           // data: JSON.stringify(response.data[0].translations[0].text),
-
-          modulesData:responseData.data.modules,
-          translatedData:translatedData,
-          courseData:JSON.stringify(responseData.data),
-          textToSummarize: text,
-
+          modulesData: translatedData,
+          courseData:JSON.stringify(responseData.data)
         }
       }
     } catch (error) {
