@@ -32,22 +32,23 @@ const dummyModuleData = [
 
 const ModuleBar = () => {
   const [courseData,setCourseData]=useState(null);
-  const [modulesData,setModulesData]=useState(dummyModuleData);
+  const [modulesData,setModulesData]=useState([]);
   const [selectedModuleId, setSelectedModuleId] = useState(1);
   const router = useRouter()
   // const params = useParams()
   const { push } = useRouter();
 
 
-  const { courseId, moduleId } = router.query
+  let { courseId, moduleId } = router.query
 
-
+  console.log(courseId)
   // const { courseId } = useParams();
   const fetchCourseData = async () => {
+    
     try {
-      const response = await axios.get(`http://127.0.0.1:8000/api/courses/${courseId}/`);
+      const response = await axios.get(`http://localhost:3000/api/courses/${courseId}/`);
       console.log(response.data);
-      // setCourseData(response.data);
+      setCourseData(response.data);
       setModulesData(response.data.modules);
     } catch (error) {
       console.error(error);
@@ -55,7 +56,7 @@ const ModuleBar = () => {
   };
   useEffect(() => {
     fetchCourseData();
-  }, []);
+  }, [courseId]);
 
   const handleModuleClick = (moduleId) => {
     setSelectedModuleId(moduleId);
@@ -100,15 +101,15 @@ const ModuleBar = () => {
               </div>
             </li>
             {modulesData.map((module) => (
-              <li key={module.module_id}>
-                <Link href={`/courses/${courseId}?moduleId=${module.module_id}`}>
+              <li key={module.id}>
+                <Link href={`/courses/${courseId}?moduleId=${module.id}`}>
 
                 <div
-                  onClick={() => handleModuleClick(module.module_id)}
-                  className={`cursor-pointer flex items-center p-2 text-gray-900 rounded-lg ${selectedModuleId === module.module_id ? 'bg-violet-500 text-white hover:bg-blue-500' : 'hover:bg-gray-100'}`}
+                  onClick={() => handleModuleClick(module.id)}
+                  className={`cursor-pointer flex items-center p-2 text-gray-900 rounded-lg ${selectedModuleId === module.id ? 'bg-violet-500 text-white hover:bg-blue-500' : 'hover:bg-gray-100'}`}
                   >
                   <span className="flex-1 ml-3 whitespace-nowrap">
-                    Module {module.module_id}
+                    Module {module.id}
                   </span>
                 </div>
                   </Link>
