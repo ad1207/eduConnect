@@ -10,7 +10,8 @@ import { useRouter } from "next/router";
 
 export default function SearchforCourses({query}) {
   const [searchQuery, setSearchQuery] = useState("");
-  const [data, setData] = useState([]);
+  const [courseData, setCourseData] = useState([]);
+  const [filterdata, setfilterData] = useState([]);
   const { push } = useRouter();
 
 
@@ -24,104 +25,57 @@ export default function SearchforCourses({query}) {
     };
 
 
-  const debounce = useDebounce(query, 500);
-  const courseData = [
+
+  const coursedata = [
     {
         id: 1,
-        title: "Introduction to Computer Science",
+        course_name: "Introduction to Computer Science",
+        course_code: "BCSE120L",
         description: "This course is an introduction to the intellectual enterprises of computer science and the art of programming.",
         image: "https://plus.unsplash.com/premium_photo-1683631776585-e1d224424ec5?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1171&q=80",
-        rating: 4.5,
-        numReviews: 12,
-        instructor: "John Doe",
-        category: "Computer Science",
-        level: "Beginner",
-        language: "English",
-        lessons: 10,
-        students: 100,
-        certificate: true,
-        enrolled: false,
-        createdAt: "2021-07-01T11:51:32.000Z",
-        updatedAt: "2021-07-01T11:51:32.000Z",
-        __v: 0,
     },
     {
         id: 2,
-        title: "Introduction to Computer Science",
+        course_name: "Introduction to Computer Science",
+        course_code: "BCSE120L",
         description: "This course is an introduction to the intellectual enterprises of computer science and the art of programming.",
         image: "https://plus.unsplash.com/premium_photo-1683631776585-e1d224424ec5?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1171&q=80",
-        rating: 4.5,
-        numReviews: 12,
-        instructor: "John Doe",
-        category: "Computer Science",
-        level: "Beginner",
-        language: "English",
-        lessons: 10,
-        students: 100,
-        certificate: true,
-        enrolled: false,
-        createdAt: "2021-07-01T11:51:32.000Z",
-        updatedAt: "2021-07-01T11:51:32.000Z",
-        __v: 0,
     },
     {
         id: 3,
-        title: "Introduction to Computer Science",
+        course_name: "Introduction to Computer Science",
+        course_code: "BCSE120L",
         description: "This course is an introduction to the intellectual enterprises of computer science and the art of programming.",
         image: "https://plus.unsplash.com/premium_photo-1683631776585-e1d224424ec5?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1171&q=80",
-        rating: 4.5,
-        numReviews: 12,
-        instructor: "John Doe",
-        category: "Computer Science",
-        level: "Beginner",
-        language: "English",
-        lessons: 10,
-        students: 100,
-        certificate: true,
-        enrolled: false,
-        createdAt: "2021-07-01T11:51:32.000Z",
-        updatedAt: "2021-07-01T11:51:32.000Z",
-        __v: 0,
     },
     {
         id: 4,
-        title: "Introduction to Computer Science",
+        course_name: "Introduction to Computer Science",
+        course_code: "BCSE120L",
         description: "This course is an introduction to the intellectual enterprises of computer science and the art of programming.",
         image: "https://plus.unsplash.com/premium_photo-1683631776585-e1d224424ec5?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1171&q=80",
-        rating: 4.5,
-        numReviews: 12,
-        instructor: "John Doe",
-        category: "Computer Science",
-        level: "Beginner",
-        language: "English",
-        lessons: 10,
-        students: 100,
-        certificate: true,
-        enrolled: false,
-        createdAt: "2021-07-01T11:51:32.000Z",
-        updatedAt: "2021-07-01T11:51:32.000Z",
-        __v: 0,
     },
   ]
 
 
   const fetchData = async () => {
-    // const endpoint = `http://127.0.0.1:8000/api/courses/search?search=${query}`;
-    // try {
-    //   const response = await fetch(endpoint, {
-    //     method: "GET",
-    //   });
-    //   const data = await response.json();
-    //   console.log(data);
-    //   setData(data);
-    // } catch (e) {
-    //   console.log(e);
-    // }
+    const endpoint = `/api/courses`;
+    try {
+      const response = await fetch(endpoint, {
+        method: "GET",
+      });
+      const data = await response.json();
+      setCourseData(data.data);
+      //console.log(courseData);
+      setfilterData(data);
+    } catch (e) {
+      console.log(e);
+    }
   };
   useEffect(() => {
     fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [debounce]);
+  },[]);
 
   return (
     <>
@@ -204,8 +158,8 @@ export default function SearchforCourses({query}) {
               </div>
               <div className="flex justify-center px-5 py-5">
                 <div className="grid gap-4 sm:grid-cols-3 ">
-                  {courseData.map((course) => (
-                    <CourseCard course={course} key={course._id} />
+                  {courseData?.map((course) => (
+                    <CourseCard course={course} key={course.id} />
                   ))}
                 </div>
               </div>
