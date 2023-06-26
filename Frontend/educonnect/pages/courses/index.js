@@ -40,7 +40,7 @@ export default function SearchforCourses({query}) {
         //   console.log(JSON.stringify(options, null, 4));
     //   });
     axios.request(options).then(function (response) {
-        console.log(JSON.stringify(response.data, null, 4));
+        // console.log(JSON.stringify(response.data, null, 4));
       }
     ).catch(function (error) {
         console.error(error);

@@ -8,6 +8,7 @@ const CoursesPage = ({modulesData, courseData, textToSummarize,translatedData,su
   const [selectedModuleId, setSelectedModuleId] = useState(1);
   const [languages, setLanguages] = useState([["english","en"],["hindi","hi"],["marathi","mr"], ["tamil","ta"]]);
   const [selectedLanguage, setSelectedLanguage] = useState("en");
+  const [summary11, setSummary11] = useState("");
 
   // useEffect(() => {
   //   fetchSupportedLanguages();ta
@@ -43,6 +44,10 @@ const CoursesPage = ({modulesData, courseData, textToSummarize,translatedData,su
       });
 
       console.log(response.data.output[0].text);
+      console.log("Text" , textToSummarize)
+
+      var summary1 = response.data.output[0].text;
+      setSummary11(summary1);
   
     } catch (error) {
       console.error(error);
@@ -77,7 +82,7 @@ const CoursesPage = ({modulesData, courseData, textToSummarize,translatedData,su
       push(`/courses/${courseId}?moduleId=${nextModuleId}`)
     }
   };
-  console.log("data", modulesData, courseData)
+  // console.log("data", modulesData, courseData)
 
   return (
     <>
@@ -110,7 +115,7 @@ const CoursesPage = ({modulesData, courseData, textToSummarize,translatedData,su
 
                 <div
                   onClick={() => handleModuleClick(module.id)}
-                  className={`cursor-pointer flex items-center p-2 text-gray-900 rounded-lg ${selectedModuleId === module.module_no ? 'bg-violet-500 text-white hover:bg-blue-500' : 'hover:bg-gray-100'}`}
+                  className={`cursor-pointer flex items-center p-2 text-gray-900 rounded-lg ${moduleId === module.module_no ? 'bg-violet-500 text-white hover:bg-blue-500' : 'hover:bg-gray-100'}`}
                   >
                   <span className="flex-1 ml-3 whitespace-nowrap">
                     Module {module.module_no}
@@ -153,8 +158,8 @@ const CoursesPage = ({modulesData, courseData, textToSummarize,translatedData,su
       )} */}
     </div>
                <DisplayData moduleId={moduleId} modulesData={modulesData} />
-
-  
+          {summary11 && <p>Summary</p>}
+          <p>{summary11}</p>
           <div className="flex justify-center">
             <div className="inline-flex rounded-md shadow-sm" role="group">
               <button
@@ -237,7 +242,7 @@ export async function getServerSideProps(context) {
           
           // );
       
-          console.log(translatedData);
+          // console.log(translatedData);
           // Process the translated data here
         } catch (error) {
           console.error("error in translate");
@@ -274,17 +279,19 @@ export async function getServerSideProps(context) {
         })
       );
   
-      console.log(JSON.stringify(translatedData));
+      // console.log(JSON.stringify(translatedData));
       
-
-
+      let textToSummarize = ""
+      responseData.data.modules.forEach((module) => {
+        textToSummarize += module.notes;
+      })
       // Process the translated text response here
       return {
         props: {
           // data: JSON.stringify(response.data[0].translations[0].text),
           modulesData: translatedData,
           courseData:JSON.stringify(responseData.data),
-          textToSummarize: text,
+          textToSummarize: JSON.stringify(responseData.data)  
         }
       }
     } catch (error) {

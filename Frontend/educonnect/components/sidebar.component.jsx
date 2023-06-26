@@ -46,7 +46,7 @@ const ModuleBar = ({moduleData}) => {
     
     try {
       const response = await axios.get(`http://localhost:3000/api/courses/${courseId}/`);
-      console.log(response.data);
+      // console.log(response.data);
       setCourseData(response.data);
       let modules = response.data.modules;
       modules.sort((a, b) => a.module_no - b.module_no);
@@ -87,7 +87,7 @@ const ModuleBar = ({moduleData}) => {
         }
       });
   
-      console.log(response.data);
+      // console.log(response.data);
     } catch (error) {
       console.error(error);
     }
