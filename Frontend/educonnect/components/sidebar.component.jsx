@@ -4,7 +4,7 @@ import DisplayData from "./displayData.component";
 import axios from "axios";
 import { useRouter } from 'next/router'
 import Link from "next/link";
-import { useParams } from "next/navigation";
+import { redirect, useParams } from "next/navigation";
 
 
 const dummyModuleData = [
@@ -12,21 +12,22 @@ const dummyModuleData = [
     module_id: 1,
     title: "Module 1",
     description: "This is module 1",
-    content: "This is module 1 content",
+    content: "Artificial intelligence (AI) is a branch of computer science that focuses on creating intelligent machines capable of performing tasks that would typically require human intelligence. AI systems are designed to learn, reason, and apply knowledge to solve problems, make decisions, and improve their performance over time. With advancements in machine learning, deep learning, and natural language processing, AI has found applications in various fields, including healthcare, finance, transportation, and more. AI algorithms can analyze large datasets, identify patterns, and make predictions or recommendations based on the data. These algorithms can be trained to recognize images, process natural language, play games, drive autonomous vehicles, and even assist in medical diagnosis and drug discovery. As AI continues to evolve, researchers and developers are exploring new possibilities and addressing ethical considerations to ensure its responsible and beneficial use in society.",
   },
   {
     module_id: 2,
     title: "Module 2",
     description: "This is module 2",
-    content: "This is module 2 content",
+    content: "In this module, we delve deeper into the concepts and techniques of artificial intelligence. We explore various AI models and algorithms, including neural networks, decision trees, genetic algorithms, and reinforcement learning. Neural networks are at the core of deep learning, a subset of AI that focuses on training models with multiple layers to extract hierarchical representations of data. We discuss the different types of neural networks, such as feedforward neural networks, convolutional neural networks (CNNs), and recurrent neural networks (RNNs), and their applications in image recognition, natural language processing, and sequence generation. Decision trees are another popular AI technique used for classification and regression tasks, providing interpretable models that make decisions based on input features. Genetic algorithms draw inspiration from the process of natural selection to optimize solutions to complex problems. Reinforcement learning involves training an agent to make sequential decisions in an environment, learning through trial and error and receiving rewards or penalties based on its actions. We explore key concepts, algorithms, and applications of these AI techniques, giving you a comprehensive understanding of their inner workings and practical use cases.",
   },
   {
     module_id: 3,
     title: "Module 3",
     description: "This is module 3",
-    content: "This is module 3 content",
+    content: "As we progress to module 3, we focus on advanced topics and emerging trends in artificial intelligence. We discuss the challenges and opportunities associated with AI, including ethical considerations, bias in AI systems, transparency, and interpretability. The responsible development and deployment of AI systems are essential to ensure fairness, accountability, and transparency. We explore cutting-edge research in AI, such as generative adversarial networks (GANs) for image synthesis, transfer learning for leveraging pre-trained models, and explainable AI for understanding model decisions. We also dive into specific applications of AI, such as natural language processing for sentiment analysis and language translation, computer vision for object detection and image segmentation, and robotics for autonomous navigation and manipulation. Additionally, we touch upon the social and economic implications of AI, including its impact on jobs, privacy, and security. By the end of this module, you will have a comprehensive understanding of advanced AI concepts, emerging trends, and their real-world applications, enabling you to contribute to the exciting field of artificial intelligence.",
   },
-]
+];
+
 
 
 const ModuleBar = () => {
@@ -35,8 +36,10 @@ const ModuleBar = () => {
   const [selectedModuleId, setSelectedModuleId] = useState(1);
   const router = useRouter()
   // const params = useParams()
+  const { push } = useRouter();
 
-  const { courseId, module } = router.query
+
+  const { courseId, moduleId } = router.query
 
 
   // const { courseId } = useParams();
@@ -62,6 +65,7 @@ const ModuleBar = () => {
     moduleId = moduleId - 1;
     if (moduleId >= 1) {
       setSelectedModuleId(moduleId);
+      push(`/courses/${courseId}?moduleId=${moduleId}`)
     }
   };
 
@@ -71,6 +75,7 @@ const ModuleBar = () => {
 
     if (nextModuleId <= totalModules) {
       setSelectedModuleId(nextModuleId);
+      push(`/courses/${courseId}?moduleId=${nextModuleId}`)
     }
   };
 
@@ -96,7 +101,7 @@ const ModuleBar = () => {
             </li>
             {modulesData.map((module) => (
               <li key={module.module_id}>
-                <Link href={`/courses/${courseId}?module=${module.module_id}`}>
+                <Link href={`/courses/${courseId}?moduleId=${module.module_id}`}>
 
                 <div
                   onClick={() => handleModuleClick(module.module_id)}
@@ -116,7 +121,8 @@ const ModuleBar = () => {
       {/* Displaying Module Data here */}
       <div className="p-4 sm:ml-64 ">
         <div className="p-4 border-2 border-gray-200 border-dashed rounded-lg bg-gray-50">
-          <DisplayData moduleId={selectedModuleId} modulesData={modulesData} />
+               <DisplayData moduleId={moduleId} modulesData={modulesData} />
+
   
           <div className="flex justify-center">
             <div className="inline-flex rounded-md shadow-sm" role="group">

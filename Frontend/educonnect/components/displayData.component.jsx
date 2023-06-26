@@ -1,5 +1,6 @@
 const DisplayData = ({ moduleId, modulesData }) => {
-  const selectedModule = modulesData.find((module) => module.id === moduleId);
+  const selectedModule = modulesData.find((module) => module.module_id == moduleId);
+  console.log("module data", modulesData, moduleId);
 
   if (!selectedModule) {
     return <div>No module selected</div>;
@@ -7,15 +8,15 @@ const DisplayData = ({ moduleId, modulesData }) => {
 
   return (
     <>
-      <section className="dark:bg-gray-900 bg-white dark:bg-gray-900">
+      <section className=" bg-white ">
         <div className="py-8 px-4 mx-auto max-w-screen-xl lg:py-6 lg:px-6">
-          <div className="max-w-screen-lg text-gray-500 sm:text-lg dark:text-gray-400">
+          <div className="max-w-screen-lg text-gray-500 sm:text-lg ">
             <div>
               <h3 className="text-2xl font-semibold">
                 {selectedModule.title}
               </h3>
-              <p className="py-4">{selectedModule.topics}</p>
-              <div className="video-container">
+              <p className="py-4">{selectedModule.description}</p>
+              {/* <div className="video-container">
                 {selectedModule.links ? (
                   <iframe
                     width="560"
@@ -27,7 +28,17 @@ const DisplayData = ({ moduleId, modulesData }) => {
                     allowFullScreen
                   ></iframe>
                 ) : null}
-              </div>
+              </div> */}
+              {/* displaying content */}
+              <div className="">
+                {selectedModule.content ? (
+                  <div
+                    dangerouslySetInnerHTML={{
+                      __html: selectedModule.content,
+                    }}
+                  ></div>
+                ) : null}
+                  </div>
             </div>
           </div>
         </div>
