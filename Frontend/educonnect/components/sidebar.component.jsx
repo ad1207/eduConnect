@@ -95,6 +95,7 @@ const ModuleBar = () => {
       <aside id="default-sidebar" className="fixed left-0 z-0 w-64 h-screen transition-transform -translate-x-full sm:top-20 sm:translate-x-0" aria-label="Sidebar">
         <div className="h-full px-3 py-4 overflow-y-auto bg-gray-50">
           <ul className="space-y-2 font-medium">
+            
             <li>
               <div className="flex items-center p-2 text-2xl font-bold text-gray-900 rounded-lg">
                 <span className="ml-3">{courseData?.course_name}</span>
@@ -115,6 +116,11 @@ const ModuleBar = () => {
                   </Link>
               </li>
             ))}
+            <li>
+              
+                <button type="button" onClick={()=>push('/courses')} className="w-full text-white bg-violet-500 hover:bg-blue-500 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2  focus:outline-none ">Go Back</button>
+              
+            </li>
           </ul>
         </div>
       </aside>
