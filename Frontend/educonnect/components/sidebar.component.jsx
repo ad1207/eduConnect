@@ -9,19 +9,19 @@ const ModuleBar = ({params:courseId}) => {
   const [modulesData,setModulesData]=useState([]);
   const [selectedModuleId, setSelectedModuleId] = useState(1);
   // const { courseId } = useParams();
-  const fetchCourseData = async () => {
-    try {
-      const response = await axios.get(`http://127.0.0.1:8000/api/courses/${courseId}/`);
-      console.log(response.data);
-      setCourseData(response.data);
-      setModulesData(response.data.modules);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-  useEffect(() => {
-    fetchCourseData();
-  }, []);
+  // const fetchCourseData = async () => {
+  //   try {
+  //     const response = await axios.get(`http://127.0.0.1:8000/api/courses/${courseId}/`);
+  //     console.log(response.data);
+  //     setCourseData(response.data);
+  //     setModulesData(response.data.modules);
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // };
+  // useEffect(() => {
+  //   fetchCourseData();
+  // }, []);
 
   const handleModuleClick = (moduleId) => {
     setSelectedModuleId(moduleId);
@@ -44,7 +44,7 @@ const ModuleBar = ({params:courseId}) => {
   };
 
   return (
-    <div className="h-screen">
+    <div className="h-screen z-0">
     <div className="pt-24 ">
       <button data-drawer-target="default-sidebar" data-drawer-toggle="default-sidebar" aria-controls="default-sidebar" type="button" className="inline-flex items-center p-2 mt-2 ml-3 text-sm text-gray-500 rounded-lg sm:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200">
         <span className="sr-only">Open sidebar</span>
@@ -55,7 +55,7 @@ const ModuleBar = ({params:courseId}) => {
     </div>
     <div className="sm:pt-0">
       {/* Sidebar */}
-      <aside id="default-sidebar" className="fixed left-0 z-50 w-64 h-screen transition-transform -translate-x-full sm:top-20 sm:translate-x-0" aria-label="Sidebar">
+      <aside id="default-sidebar" className="fixed left-0 z-0 w-64 h-screen transition-transform -translate-x-full sm:top-20 sm:translate-x-0" aria-label="Sidebar">
         <div className="h-full px-3 py-4 overflow-y-auto bg-gray-50">
           <ul className="space-y-2 font-medium">
             <li>
