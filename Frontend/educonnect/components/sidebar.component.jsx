@@ -41,7 +41,7 @@ const ModuleBar = ({moduleData}) => {
 
   let { courseId, moduleId } = router.query
   // const { courseId } = useParams();
-  // const fetchCourseData = async () => {
+  const fetchCourseData = async () => {
     
     try {
       const response = await axios.get(`http://localhost:3000/api/courses/${courseId}/`);

@@ -4,12 +4,15 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { useState } from "react";
 
-const CoursesPage = ({data,modulesData, courseData}) => {
+const CoursesPage = ({modulesData, courseData, textToSummarize,translatedData,summary}) => {
   const [selectedModuleId, setSelectedModuleId] = useState(1);
 
   const router = useRouter()
   const { push } = useRouter();
   let { courseId, moduleId } = router.query
+
+  
+
   const handleModuleClick = (moduleId) => {
     setSelectedModuleId(moduleId);
   };
@@ -57,20 +60,25 @@ const CoursesPage = ({data,modulesData, courseData}) => {
               </div>
             </li>
             {modulesData.map((module) => (
-              <li key={module.id}>
-                <Link href={`/courses/${courseId}?moduleId=${module.id}`}>
+              <li key={module.module_no}>
+                <Link href={`/courses/${courseId}?moduleId=${module.module_no}`}>
 
                 <div
                   onClick={() => handleModuleClick(module.id)}
-                  className={`cursor-pointer flex items-center p-2 text-gray-900 rounded-lg ${selectedModuleId === module.id ? 'bg-violet-500 text-white hover:bg-blue-500' : 'hover:bg-gray-100'}`}
+                  className={`cursor-pointer flex items-center p-2 text-gray-900 rounded-lg ${selectedModuleId === module.module_no ? 'bg-violet-500 text-white hover:bg-blue-500' : 'hover:bg-gray-100'}`}
                   >
                   <span className="flex-1 ml-3 whitespace-nowrap">
-                    Module {module.id}
+                    Module {module.module_no}
                   </span>
                 </div>
                   </Link>
               </li>
             ))}
+            <li>
+              
+              <button type="button" onClick={()=>postData()} className="w-full focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2  focus:outline-none ">Get Summary</button>
+            
+          </li>
             <li>
               
                 <button type="button" onClick={()=>push('/courses')} className="w-full text-white bg-violet-500 hover:bg-blue-500 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2  focus:outline-none ">Go Back</button>
@@ -137,34 +145,6 @@ export async function getServerSideProps(context) {
       } catch (error) {
         console.error(error);
       }
-        const data = [{ Text: "Hello, what is your name?" }];
-        
-        // console.log("Module data",responseData.data.modules);
-
-        try {
-          // const translatedData = await Promise.all(
-          //   data.map(async (item) => {
-            //   const translatedNotes = await axios.post(endpoint, [{Text : item.notes}], { headers });
-            //   const translatedModuleName = await axios.post(endpoint, [{Text : item.module_name}], { headers });
-            //   const translatedTopics = await axios.post(endpoint, [{Text:item.topics}], { headers });
-      
-            //   return {
-            //     ...item,
-            //     notes: translatedNotes.data[0].translations[0].text,
-            //     module_name: translatedModuleName.data[0].translations[0].text,
-            //     topics: translatedTopics.data[0].translations[0].text,
-            //   };
-            translatedData = await axios.post(endpoint, [{Text : "Hello there"}], { headers })
-            // })
-          
-          // );
-      
-          console.log(translatedData);
-          // Process the translated data here
-        } catch (error) {
-          console.error("error in translate");
-          // Handle the error
-        }
 
         const translateText = async (text, headers, endpoint) => {
           const requestBody = [{ Text: text }];
@@ -178,6 +158,7 @@ export async function getServerSideProps(context) {
           }
         };
         
+    let summary = "";
   
     try {
 
@@ -197,15 +178,25 @@ export async function getServerSideProps(context) {
       );
   
       console.log(JSON.stringify(translatedData));
-      
 
+      
+      
+      responseData.data.modules.sort((a, b) => a.module_no - b.module_no);
+      let text = ""
+      responseData.data.modules.forEach((module) => {
+        text += module.notes;
+      });
+
+      
 
       // Process the translated text response here
       return {
         props: {
           // data: JSON.stringify(response.data[0].translations[0].text),
-          modulesData: translatedData,
-          courseData:JSON.stringify(responseData.data)
+          modulesData:responseData.data.modules,
+          translatedData:translatedData,
+          courseData:JSON.stringify(responseData.data),
+          summary: summary,
         }
       }
     } catch (error) {
